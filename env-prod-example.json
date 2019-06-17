@@ -1,0 +1,7 @@
+{
+  "AWS_PROFILE": "xxx",
+  "S3BUCKET": "xxx",
+  "DB_CONN": "xxx",
+  "JWT_KEY": "xxx",
+  "THE_ENV": "prod"
+}

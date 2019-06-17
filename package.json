@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "createApi": "claudia create --region eu-central-1 --handler lambda.handler --deploy-proxy-api --set-env-from-json env-dev.json --version development --use-s3-bucket testbucketsamos",
+    "update": "claudia update --set-env-from-json env-dev.json --version development --use-s3-bucket testbucketsamos",
+    "set-production": "claudia set-version --version production --set-env-from-json env-prod.json",
+    "logs": "aws logs filter-log-events --log-group-name /aws/lambda/samos-backend",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "lint-staged": {
@@ -19,7 +23,7 @@
   "dependencies": {
     "aws-serverless-express": "^3.3.6",
     "body-parser": "^1.18.3",
-    "dotenv": "^6.0.0",
+    "claudia-api-builder": "^4.1.2",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.13",

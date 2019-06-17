@@ -9,14 +9,11 @@ const eventTypesRoute = require('./api/routes/eventTypes');
 const venuesRoute = require('./api/routes/venues');
 
 mongoose
-  .connect(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shard-00-00-yirmu.mongodb.net:27017,cluster0-shard-00-01-yirmu.mongodb.net:27017,cluster0-shard-00-02-yirmu.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true`,
-    {
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useCreateIndex: true
-    }
-  )
+  .connect(process.env.DB_CONN, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  })
   .then(
     () => {
       console.log('Connected!');

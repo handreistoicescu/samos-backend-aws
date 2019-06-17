@@ -3,3 +3,5 @@ node_modules
 nodemon.json
 .vscode
 .DS_Store
+env-dev.json
+env-prod.json
