@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const buildRoute = require('./api/routes/build');
 const eventsRoute = require('./api/routes/events');
 const eventTypesRoute = require('./api/routes/eventTypes');
 const venuesRoute = require('./api/routes/venues');
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 app.use('/venues', venuesRoute);
 app.use('/events', eventsRoute);
 app.use('/eventtypes', eventTypesRoute);
+app.use('/build', buildRoute);
 // app.use('/user', userRoute);
 
 app.use((req, res, next) => {

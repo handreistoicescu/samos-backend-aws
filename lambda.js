@@ -10,7 +10,8 @@ const binaryMimeTypes = [
   'image/png',
   'image/svg+xml'
 ];
+
 const server = awsServerlessExpress.createServer(app, null, binaryMimeTypes);
-console.log('ei1');
+
 exports.handler = (event, context) =>
   awsServerlessExpress.proxy(server, event, context);

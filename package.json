@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "createApi": "claudia create --region eu-central-1 --handler lambda.handler --deploy-proxy-api --set-env-from-json env-dev.json --version development --use-s3-bucket testbucketsamos",
-    "update": "claudia update --set-env-from-json env-dev.json --version development --use-s3-bucket testbucketsamos",
+    "createApi": "claudia create --region eu-central-1 --handler lambda.handler --deploy-proxy-api --set-env-from-json env-dev.json --version development --use-s3-bucket backend-claudia-uploads",
+    "update": "claudia update --set-env-from-json env-dev.json --version development --use-s3-bucket backend-claudia-uploads",
     "set-production": "claudia set-version --version production --set-env-from-json env-prod.json",
     "logs": "aws logs filter-log-events --log-group-name /aws/lambda/samos-backend",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -26,6 +26,7 @@
     "claudia-api-builder": "^4.1.2",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
+    "moment": "^2.24.0",
     "mongoose": "^5.2.13",
     "morgan": "^1.9.0",
     "multer": "^1.4.0"
