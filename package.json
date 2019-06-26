@@ -9,7 +9,7 @@
     "set-production": "claudia set-version --version production --set-env-from-json env-prod.json",
     "logs": "aws logs filter-log-events --log-group-name /aws/lambda/samos-backend",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
+    "start-local": "nodemon app.local.js",
     "lint-staged": {
       "*.{js}": [
         "pretty-quick --staged",

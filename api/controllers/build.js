@@ -7,38 +7,40 @@ const Event = require('../models/event');
 
 const netlifyWebhook = process.env.NETLIFY_WEBHOOK;
 
-exports.build_netlify_site = (req, res, next) => {
+exports.build_netlify_site = async (req, res, next) => {
   // 1. get event data from database
-  Event.find({
-    date: { $gte: moment(), $lte: moment().add(14, 'days') },
-    published: { $eq: true }
-  })
-    .populate({ path: 'type', select: 'name' })
-    .populate({ path: 'venue', select: 'name' })
-    .select('date link name type venue')
-    .sort('date name')
-    .exec()
-    .then(docs => {
-      const responseBody = {
-        events: docs.map(doc => {
-          return {
-            date: doc.date,
-            link: doc.link,
-            name: doc.name,
-            type: doc.type.name,
-            venue: doc.venue.name
-          };
-        })
-      };
-      res.status(200).json(responseBody);
+  let eventData;
+
+  try {
+    const queryData = await Event.find({
+      date: { $gte: moment(), $lte: moment().add(14, 'days') },
+      published: { $eq: true }
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
+      .populate({ path: 'type', select: 'name' })
+      .populate({ path: 'venue', select: 'name' })
+      .select('date link name type venue')
+      .sort('date name');
+
+    eventData = {
+      events: queryData.map(doc => {
+        return {
+          date: doc.date,
+          link: doc.link,
+          name: doc.name,
+          type: doc.type.name,
+          venue: doc.venue.name
+        };
+      })
+    };
+  } catch (error) {
+    res.status(500).json(error);
+  }
+
   // 2. send request to netlify webhook with data in payload
   // if the response is ok, make a database record with the ID of the build that started (get that from response data)
   // return a response with the build ID
+
+  res.status(200).json(eventData);
 };
 
 exports.build_listener = (req, res, next) => {
