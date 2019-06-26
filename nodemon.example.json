@@ -1,5 +1,6 @@
 {
   "env": {
-    "DB_CONN": "xxx"
+    "DB_CONN": "xxx",
+    "NETLIFY_WEBHOOK": "xxx"
   }
 }

@@ -1,13 +1,17 @@
-const mongoose = require('mongoose');
+const got = require('got');
 const qs = require('qs');
 const moment = require('moment');
+const mongoose = require('mongoose');
 
 // const Build = require('../models/build');
 const Event = require('../models/event');
 
+const netlifyWebhookUrl = process.env.NETLIFY_WEBHOOK;
+
 exports.build_netlify_site = async (req, res, next) => {
   // 1. get event data from database
   let eventData;
+  let netlifyPostResponse;
 
   try {
     const queryData = await Event.find({
@@ -22,11 +26,12 @@ exports.build_netlify_site = async (req, res, next) => {
     eventData = {
       events: queryData.map(doc => {
         return {
+          act: doc.name,
+          canceled: doc.canceled,
           date: doc.date,
-          link: doc.link,
-          name: doc.name,
+          eventUrl: doc.link,
           type: doc.type.name,
-          venue: doc.venue.name
+          venueName: doc.venue.name
         };
       })
     };
@@ -40,7 +45,41 @@ exports.build_netlify_site = async (req, res, next) => {
   // if the response is ok, make a database record with the ID of the build that started (get that from response data)
   // return a response with the build ID
 
-  res.status(200).json(eventData);
+  try {
+    netlifyPostResponse = await got.post(netlifyWebhookUrl, {
+      body: encodeURIComponent(JSON.stringify(eventData))
+    });
+
+    const {
+      aborted,
+      body,
+      complete,
+      destroyed,
+      method,
+      requestUrl,
+      statusCode,
+      statusMessage,
+      url
+    } = netlifyPostResponse;
+
+    res.status(200).json({
+      netlifyResponse: {
+        aborted,
+        body,
+        complete,
+        destroyed,
+        method,
+        requestUrl,
+        statusCode,
+        statusMessage,
+        url
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.toString()
+    });
+  }
 };
 
 exports.build_listener = (req, res, next) => {
