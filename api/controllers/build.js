@@ -5,8 +5,6 @@ const moment = require('moment');
 // const Build = require('../models/build');
 const Event = require('../models/event');
 
-const netlifyWebhook = process.env.NETLIFY_WEBHOOK;
-
 exports.build_netlify_site = async (req, res, next) => {
   // 1. get event data from database
   let eventData;
@@ -32,8 +30,10 @@ exports.build_netlify_site = async (req, res, next) => {
         };
       })
     };
-  } catch (error) {
-    res.status(500).json(error);
+  } catch (err) {
+    res.status(500).json({
+      error: err.toString()
+    });
   }
 
   // 2. send request to netlify webhook with data in payload
