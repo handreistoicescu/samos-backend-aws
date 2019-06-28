@@ -2,6 +2,8 @@
   "AWS_PROFILE": "xxx",
   "S3BUCKET": "xxx",
   "DB_CONN": "xxx",
+  "NETLIFY_API_ACCESS_TOKEN": "xxx",
+  "NETLIFY_SITE_ID": "xxx",
   "NETLIFY_WEBHOOK": "xxx",
   "JWT_KEY": "xxx",
   "THE_ENV": "prod"
