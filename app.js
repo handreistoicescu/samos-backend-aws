@@ -9,21 +9,6 @@ const eventsRoute = require('./api/routes/events');
 const eventTypesRoute = require('./api/routes/eventTypes');
 const venuesRoute = require('./api/routes/venues');
 
-mongoose
-  .connect(process.env.DB_CONN, {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-  })
-  .then(
-    () => {
-      console.log('Connected!');
-    },
-    err => {
-      console.log(err);
-    }
-  );
-
 app.use(morgan('dev'));
 
 app.use(bodyParser.urlencoded({ extended: false }));

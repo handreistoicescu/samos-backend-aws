@@ -1,5 +1,4 @@
 const got = require('got');
-const qs = require('qs');
 const moment = require('moment');
 const mongoose = require('mongoose');
 const NetlifyAPI = require('netlify');
@@ -15,6 +14,7 @@ const netlifySiteId = process.env.NETLIFY_SITE_ID;
 exports.build_netlify_site = async (req, res, next) => {
   // 1. get event data from database
   let eventData;
+  let currentNetlifyBuild;
 
   try {
     const queryData = await Event.find({
@@ -50,27 +50,36 @@ exports.build_netlify_site = async (req, res, next) => {
   // return a response with the build ID
 
   try {
-    const netlifyPostResponse = await got.post(netlifyWebhookUrl, {
+    await got.post(netlifyWebhookUrl, {
       body: encodeURIComponent(JSON.stringify(eventData)),
       responseType: 'json'
     });
 
-    // console.log(`Netlify post response`, netlifyPostResponse);
+    console.log(`Netlify POST to webhook DONE`);
   } catch (err) {
     res.status(500).json({
       error: err.toString()
     });
   }
 
-  // get current build data from Netlify and store it
+  // get current build data from Netlify
 
   try {
     const builds = await client.listSiteBuilds({
       site_id: netlifySiteId
     });
 
-    const currentBuild = builds[0];
+    console.log('Got site build list from Netlify');
 
+    currentBuild = builds[0];
+  } catch (err) {
+    res.status(500).json({
+      error: err.toString()
+    });
+  }
+
+  // store build data from Netlify
+  try {
     const build = new Build({
       _id: new mongoose.Types.ObjectId(),
       netlifyBuildId: currentBuild.id,
@@ -79,19 +88,9 @@ exports.build_netlify_site = async (req, res, next) => {
       status: 'INITIATED. NO RESPONSE FROM NETLIFY YET.'
     });
 
-    build
-      .save()
-      .then(result => {
-        console.log('Saved build to DB', result);
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({
-          error: err
-        });
-      });
+    const buildData = await build.save();
 
-    console.log('Netlify build data', currentBuild);
+    console.log('Saved build to DB', buildData);
 
     res.status(200).json({
       netlifyBuild: currentBuild
@@ -103,10 +102,28 @@ exports.build_netlify_site = async (req, res, next) => {
   }
 };
 
-exports.build_listener = (req, res, next) => {
+exports.build_listener = async (req, res, next) => {
+  // This is made for accepting Outgoing Webhook requests from Netlify
   // when receiving notifications from Netlify, match the build ID of the build with one from the database (if at all possible) and register the status
   // if there is no build with that ID or there is one, but it's marked as "done", don't do anything at all
   // if the status of the build is complete, mark the build as "done"
+  const { build_id } = req.body;
+  console.log(`Netlify outgoing web hook build id: ${build_id}`);
+
+  // Get the info via API for this build id
+
+  try {
+    const buildStatus = await client.getSiteBuild({
+      build_id: currentNetlifyBuild
+    });
+    console.log(`Build status: ${buildStatus}`);
+  } catch (err) {
+    res.status(500).json({
+      error: err.toString()
+    });
+  }
+
+  res.status(200);
 };
 
 exports.build_get_build = (req, res, next) => {
