@@ -27,7 +27,7 @@
     "express": "^4.16.3",
     "got": "^9.6.0",
     "jsonwebtoken": "^8.3.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.2.13",
     "morgan": "^1.9.0",
     "multer": "^1.4.0",
