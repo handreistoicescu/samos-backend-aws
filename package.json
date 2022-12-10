@@ -24,7 +24,7 @@
     "aws-serverless-express": "^3.3.6",
     "body-parser": "^1.18.3",
     "claudia-api-builder": "^4.1.2",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "got": "^9.6.0",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.24.0",
