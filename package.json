@@ -26,7 +26,7 @@
     "claudia-api-builder": "^4.1.2",
     "express": "^4.16.3",
     "got": "^9.6.0",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.2.13",
     "morgan": "^1.9.0",
